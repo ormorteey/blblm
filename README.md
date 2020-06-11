@@ -41,18 +41,24 @@ argframe %>%
 
 ## Logistic regression example
 
+We build the logistic model using family = "binomial" i.e `blbglm(admit ~ gre+gpa,data = df_bin, m = 5, B = 10, family = "binomial")`
 
 ```{r}
 df_bin <- read.csv("https://stats.idre.ucla.edu/stat/data/binary.csv")
 df_bin$rank <- as.factor(df_bin$rank)
 fit_bin <- blbglm(admit ~ gre+gpa,data = df_bin, m = 5, B = 10, family = "binomial")
+```
+
+`coef(object, ...)` computes the coefficient of the blbglm object
+
+```{r}
 coef(fit_bin)
 
 #>   (Intercept)           gre           gpa 
 #> -0.4963597652  0.0005707091  0.1370519761
 ```
 
-We compute the confidence interval for the coefficients of gre and gpa. For all confidence interval, the default is alpha level of .05
+We compute the confidence interval for the coefficients of gre and gpa. For all confidence interval, the default is alpha level of .05. confin provides confidence intervals for model parameters. It is of the form `confint(object, parm = NULL, level = 0.95, ...)`
 
 ```{r}
 confint(fit_bin, c("gre", "gpa"))
@@ -63,6 +69,7 @@ confint(fit_bin, c("gre", "gpa"))
 ```
 
 We compute the variance of the the fit.
+sigma is of the form `sigma(object, confidence = FALSE, level = 0.95, ...)`
 
 ```{r}
 sigma(fit_bin)
@@ -76,8 +83,8 @@ sigma(fit_bin, confidence = TRUE)
 #>     sigma       lwr       upr 
 #> 0.4476883 0.4121311 0.4744191
 ```
-
-We predict the outcome for new data.
+To obtain predictions and optionally estimates standard errors of those predictions from a fitted generalized linear model object.
+We predict the outcome for new data. The prediction function is of the form predict(object, new_data, confidence = FALSE, level = 0.95, ...)
 
 ```{r}
 predict(fit_bin, data.frame(gre = c(600, 560), gpa = c(3.67, 3.5)))
@@ -95,7 +102,7 @@ predict(fit_bin, data.frame(gre = c(600, 560), gpa = c(3.67, 3.5)), confidence =
 
 ## Parallelization
 
-We specify the number of workers
+We must specify the number of workers to use parallelization feature. 
 
 ```{r}
 library(furrr)
@@ -105,6 +112,7 @@ library(furrr)
 suppressWarnings(plan(multiprocess, workers = 2))
 
 ```
+
 ```{r}
 df_bin <- read.csv("https://stats.idre.ucla.edu/stat/data/binary.csv")
 df_bin$rank <- as.factor(df_bin$rank)

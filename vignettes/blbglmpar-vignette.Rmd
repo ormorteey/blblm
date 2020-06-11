@@ -47,7 +47,11 @@ a2 <- c("data", "an optional data frame, list or environment (or object coercibl
 a3 <- c("family", "a description of the error distribution and link function to be used in the mode1. More about the family coube be found at https://stat.ethz.ch/R-manual/R-devel/library/stats/html/family.html")
 a4 <- c("n", "number of splits data should be divided into")
 a5 <- c("B", "number of resamples for bootstrap")
-argframe <- matrix(rbind(a1,a2,a3,a4,a5), nrow = 5, ncol = 2)
+a6 <- c("object or fit", "a blbglm object")
+a7 <- c("confidence", "computes confidence interval of estimate if set to TRUE, otherwise ignore")
+a8 <- c("level", "level for the confidence interval")
+a9 <- c("new_data","dataframe containing variables in formula to be used for prediction")
+argframe <- matrix(rbind(a1,a2,a3,a4,a5,a6,a7,a8,a9), nrow = 9, ncol = 2)
 argframe %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
@@ -56,22 +60,29 @@ argframe %>%
 
 ## Logistic regression example
 
+We build the logistic model using family = "binomial" i.e `blbglm(admit ~ gre+gpa,data = df_bin, m = 5, B = 10, family = "binomial")`
 
 ```{r}
 df_bin <- read.csv("https://stats.idre.ucla.edu/stat/data/binary.csv")
 df_bin$rank <- as.factor(df_bin$rank)
 fit_bin <- blbglm(admit ~ gre+gpa,data = df_bin, m = 5, B = 10, family = "binomial")
+```
+
+`coef(object, ...)` computes the coefficient of the blbglm object
+
+```{r}
 coef(fit_bin)
 
 ```
 
-We compute the confidence interval for the coefficients of gre and gpa. For all confidence interval, the default is alpha level of .05
+We compute the confidence interval for the coefficients of gre and gpa. For all confidence interval, the default is alpha level of .05. confin provides confidence intervals for model parameters. It is of the form `confint(object, parm = NULL, level = 0.95, ...)`
 
 ```{r}
 confint(fit_bin, c("gre", "gpa"))
 ```
 
 We compute the variance of the the fit.
+sigma is of the form `sigma(object, confidence = FALSE, level = 0.95, ...)`
 
 ```{r}
 sigma(fit_bin)
@@ -81,7 +92,8 @@ sigma(fit_bin)
 sigma(fit_bin, confidence = TRUE)
 ```
 
-We predict the outcome for new data.
+To obtain predictions and optionally estimates standard errors of those predictions from a fitted generalized linear model object.
+We predict the outcome for new data. The prediction function is of the form predict(object, new_data, confidence = FALSE, level = 0.95, ...)
 
 ```{r}
 predict(fit_bin, data.frame(gre = c(600, 560), gpa = c(3.67, 3.5)))
@@ -92,7 +104,7 @@ predict(fit_bin, data.frame(gre = c(600, 560), gpa = c(3.67, 3.5)), confidence =
 
 ## Parallelization
 
-We specify the number of workers
+We must specify the number of workers to use parallelization feature. 
 
 ```{r}
 library(furrr)
