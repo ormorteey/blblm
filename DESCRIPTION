@@ -1,18 +1,26 @@
-Package: blblm
+Package: blbglmpar
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Fitting Generalized Linear Models Using Bootstrap
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Abdul-Hakeem Omotayo
+Maintainer: The package maintainer <sqoma@rocketmail.com>
+Description: blbglmpar is used to fit generalized linear models, 
+    specified by giving a symbolic description of the linear predictor and a description of the error distribution. blbglmpar also has parallelization capabilities.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Suggests: 
-    testthat (>= 2.1.0)
+    testthat (>= 2.1.0),
+    knitr,
+    rmarkdown,
+    tidyverse,
+    kableExtra
 Imports: 
     purrr,
-    magrittr
+    magrittr,
+    furrr,
+    future,
+    vroom,
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
+VignetteBuilder: knitr
