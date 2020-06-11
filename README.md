@@ -37,9 +37,7 @@ argframe %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
-```{r echo=FALSE, out.width='80%'}
-knitr::include_graphics("prop.png")
-```
+![properties](prop.PNG)
 
 ## Logistic regression example
 
